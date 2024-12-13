@@ -1,32 +1,37 @@
 import { useState } from "react";
+import Select from "react-select";
 import { checkShipping } from "../services/api";
 
 const cities = [
-  "Jakarta",
-  "Bandung",
-  "Surabaya",
-  "Semarang",
-  "Yogyakarta",
-  "Malang",
-  "Medan",
-  "Denpasar",
-  "Makassar",
-  "Balikpapan",
+  { value: "Jakarta", label: "Jakarta" },
+  { value: "Bandung", label: "Bandung" },
+  { value: "Surabaya", label: "Surabaya" },
+  { value: "Semarang", label: "Semarang" },
+  { value: "Yogyakarta", label: "Yogyakarta" },
+  { value: "Malang", label: "Malang" },
+  { value: "Medan", label: "Medan" },
+  { value: "Denpasar", label: "Denpasar" },
+  { value: "Makassar", label: "Makassar" },
+  { value: "Balikpapan", label: "Balikpapan" },
 ];
 
 const CheckShippingPage = () => {
   const [form, setForm] = useState({
     name: "",
     weight: "",
-    senderCity: "",
-    receiverCity: "",
+    senderCity: null,
+    receiverCity: null,
   });
   const [result, setResult] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await checkShipping(form);
+      const response = await checkShipping({
+        ...form,
+        senderCity: form.senderCity?.value,
+        receiverCity: form.receiverCity?.value,
+      });
       setResult(response.data);
     } catch (error) {
       alert("Gagal mengecek ongkir!");
@@ -49,28 +54,22 @@ const CheckShippingPage = () => {
           value={form.weight}
           onChange={(e) => setForm({ ...form, weight: e.target.value })}
         />
-        <select
+        <Select
+          placeholder="Pilih Kota Pengirim"
+          options={cities}
           value={form.senderCity}
-          onChange={(e) => setForm({ ...form, senderCity: e.target.value })}
-        >
-          <option value="">Pilih Kota Pengirim</option>
-          {cities.map((city, index) => (
-            <option key={index} value={city}>
-              {city}
-            </option>
-          ))}
-        </select>
-        <select
+          onChange={(selectedOption) =>
+            setForm({ ...form, senderCity: selectedOption })
+          }
+        />
+        <Select
+          placeholder="Pilih Kota Penerima"
+          options={cities}
           value={form.receiverCity}
-          onChange={(e) => setForm({ ...form, receiverCity: e.target.value })}
-        >
-          <option value="">Pilih Kota Penerima</option>
-          {cities.map((city, index) => (
-            <option key={index} value={city}>
-              {city}
-            </option>
-          ))}
-        </select>
+          onChange={(selectedOption) =>
+            setForm({ ...form, receiverCity: selectedOption })
+          }
+        />
         <button type="submit">Cek Ongkir</button>
       </form>
 

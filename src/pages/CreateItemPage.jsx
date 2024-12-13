@@ -1,26 +1,27 @@
 import { useState } from "react";
+import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 import { createItem } from "../services/api";
 
 const cities = [
-  "Jakarta",
-  "Bandung",
-  "Surabaya",
-  "Semarang",
-  "Yogyakarta",
-  "Malang",
-  "Medan",
-  "Denpasar",
-  "Makassar",
-  "Balikpapan",
+  { value: "Jakarta", label: "Jakarta" },
+  { value: "Bandung", label: "Bandung" },
+  { value: "Surabaya", label: "Surabaya" },
+  { value: "Semarang", label: "Semarang" },
+  { value: "Yogyakarta", label: "Yogyakarta" },
+  { value: "Malang", label: "Malang" },
+  { value: "Medan", label: "Medan" },
+  { value: "Denpasar", label: "Denpasar" },
+  { value: "Makassar", label: "Makassar" },
+  { value: "Balikpapan", label: "Balikpapan" },
 ];
 
 const CreateItemPage = () => {
   const [form, setForm] = useState({
     name: "",
     weight: "",
-    senderCity: "",
-    receiverCity: "",
+    senderCity: null,
+    receiverCity: null,
     address: "",
     senderId: "",
     receiverId: "",
@@ -34,14 +35,16 @@ const CreateItemPage = () => {
       const payload = {
         ...form,
         weight: parseFloat(form.weight),
+        senderCity: form.senderCity?.value,
+        receiverCity: form.receiverCity?.value,
       };
       await createItem(payload);
       alert("Item berhasil dibuat!");
       setForm({
         name: "",
         weight: "",
-        senderCity: "",
-        receiverCity: "",
+        senderCity: null,
+        receiverCity: null,
         address: "",
         senderId: "",
         receiverId: "",
@@ -71,30 +74,22 @@ const CreateItemPage = () => {
           onChange={(e) => setForm({ ...form, weight: e.target.value })}
           required
         />
-        <select
+        <Select
+          placeholder="Pilih Kota Asal"
+          options={cities}
           value={form.senderCity}
-          onChange={(e) => setForm({ ...form, senderCity: e.target.value })}
-          required
-        >
-          <option value="">Pilih Kota Asal</option>
-          {cities.map((city, index) => (
-            <option key={index} value={city}>
-              {city}
-            </option>
-          ))}
-        </select>
-        <select
+          onChange={(selectedOption) =>
+            setForm({ ...form, senderCity: selectedOption })
+          }
+        />
+        <Select
+          placeholder="Pilih Kota Tujuan"
+          options={cities}
           value={form.receiverCity}
-          onChange={(e) => setForm({ ...form, receiverCity: e.target.value })}
-          required
-        >
-          <option value="">Pilih Kota Tujuan</option>
-          {cities.map((city, index) => (
-            <option key={index} value={city}>
-              {city}
-            </option>
-          ))}
-        </select>
+          onChange={(selectedOption) =>
+            setForm({ ...form, receiverCity: selectedOption })
+          }
+        />
         <input
           type="text"
           placeholder="Alamat Pengiriman"
