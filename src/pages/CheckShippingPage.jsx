@@ -1,6 +1,19 @@
 import { useState } from "react";
 import { checkShipping } from "../services/api";
 
+const cities = [
+  "Jakarta",
+  "Bandung",
+  "Surabaya",
+  "Semarang",
+  "Yogyakarta",
+  "Malang",
+  "Medan",
+  "Denpasar",
+  "Makassar",
+  "Balikpapan",
+];
+
 const CheckShippingPage = () => {
   const [form, setForm] = useState({
     name: "",
@@ -36,18 +49,28 @@ const CheckShippingPage = () => {
           value={form.weight}
           onChange={(e) => setForm({ ...form, weight: e.target.value })}
         />
-        <input
-          type="text"
-          placeholder="Kota Pengirim"
+        <select
           value={form.senderCity}
           onChange={(e) => setForm({ ...form, senderCity: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Kota Penerima"
+        >
+          <option value="">Pilih Kota Pengirim</option>
+          {cities.map((city, index) => (
+            <option key={index} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
+        <select
           value={form.receiverCity}
           onChange={(e) => setForm({ ...form, receiverCity: e.target.value })}
-        />
+        >
+          <option value="">Pilih Kota Penerima</option>
+          {cities.map((city, index) => (
+            <option key={index} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
         <button type="submit">Cek Ongkir</button>
       </form>
 
@@ -65,11 +88,11 @@ const CheckShippingPage = () => {
                 <td>{result.weight} Kg</td>
               </tr>
               <tr>
-                <th>Asal</th>
+                <th>Kota Asal</th>
                 <td>{result.senderCity}</td>
               </tr>
               <tr>
-                <th>Tujuan</th>
+                <th>Kota Tujuan</th>
                 <td>{result.receiverCity}</td>
               </tr>
               <tr>

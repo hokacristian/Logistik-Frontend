@@ -37,8 +37,8 @@ const DashboardPage = () => {
               <th>Berat (Kg)</th>
               <th>Kota Asal</th>
               <th>Kota Tujuan</th>
-              <th>Sender ID</th>
-              <th>Receiver ID</th>
+              <th>Nama Pengirim</th>
+              <th>Nama Penerima</th>
               <th>Status</th>
             </tr>
           </thead>

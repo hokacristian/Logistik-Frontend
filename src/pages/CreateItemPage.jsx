@@ -1,6 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { createItem } from "../services/api";
+
+const cities = [
+  "Jakarta",
+  "Bandung",
+  "Surabaya",
+  "Semarang",
+  "Yogyakarta",
+  "Malang",
+  "Medan",
+  "Denpasar",
+  "Makassar",
+  "Balikpapan",
+];
 
 const CreateItemPage = () => {
   const [form, setForm] = useState({
@@ -13,14 +26,14 @@ const CreateItemPage = () => {
     receiverId: "",
   });
 
-  const navigate = useNavigate(); // Inisialisasi useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const payload = {
         ...form,
-        weight: parseFloat(form.weight), // Konversi weight ke float
+        weight: parseFloat(form.weight),
       };
       await createItem(payload);
       alert("Item berhasil dibuat!");
@@ -33,7 +46,7 @@ const CreateItemPage = () => {
         senderId: "",
         receiverId: "",
       });
-      navigate("/dashboard"); // Arahkan ke DashboardPage
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error creating item:", error.response?.data || error.message);
       alert("Gagal membuat item. Pastikan semua data sudah benar.");
@@ -58,20 +71,30 @@ const CreateItemPage = () => {
           onChange={(e) => setForm({ ...form, weight: e.target.value })}
           required
         />
-        <input
-          type="text"
-          placeholder="Kota Asal"
+        <select
           value={form.senderCity}
           onChange={(e) => setForm({ ...form, senderCity: e.target.value })}
           required
-        />
-        <input
-          type="text"
-          placeholder="Kota Tujuan"
+        >
+          <option value="">Pilih Kota Asal</option>
+          {cities.map((city, index) => (
+            <option key={index} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
+        <select
           value={form.receiverCity}
           onChange={(e) => setForm({ ...form, receiverCity: e.target.value })}
           required
-        />
+        >
+          <option value="">Pilih Kota Tujuan</option>
+          {cities.map((city, index) => (
+            <option key={index} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
         <input
           type="text"
           placeholder="Alamat Pengiriman"
@@ -81,14 +104,14 @@ const CreateItemPage = () => {
         />
         <input
           type="text"
-          placeholder="ID Pengirim"
+          placeholder="Nama Pengirim"
           value={form.senderId}
           onChange={(e) => setForm({ ...form, senderId: e.target.value })}
           required
         />
         <input
           type="text"
-          placeholder="ID Penerima"
+          placeholder="Nama Penerima"
           value={form.receiverId}
           onChange={(e) => setForm({ ...form, receiverId: e.target.value })}
           required
